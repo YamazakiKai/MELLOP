@@ -56,7 +56,68 @@ public class Stage : MonoBehaviour
         // デバック
         Clear();
     }
-    
+    /// <summary>
+    /// csvファイル読み込み
+    /// </summary>
+    void csvLoader()
+    {
+        // csv
+        TextAsset File; 
+        // csvのデータを格納List
+        List<string[]> Data = new List<string[]>();
+        // csvファイルをResourcesからロードする
+        File = Resources.Load("StageFiles/No." +　number) as TextAsset;
+        // StringReaderにすることでReadLine()やPeek()を使えるようにする
+        System.IO.StringReader reader = new System.IO.StringReader(File.text);
+        // Peekで文字列が読めなくなるまで実行する
+        while (reader.Peek() != -1)
+        {
+            // 1行ずつ文字列を読み込む
+            string line = reader.ReadLine();
+            // 文字列をカンマで区切る
+            Data.Add(line.Split(','));
+        }
+        // 要素数
+        int length = int.Parse(Data[0][1]);
+        // 列
+        var Row = 0;　
+        string path = "";
+        // SpriteRenderer参照
+        SpriteRenderer spriteRenderer = null;
+        for (int line = 0; line <= length; line++)
+        {
+            // ArrowBlockがある場合
+            if (Data[line][Row] == "ArrowBlock"){
+                path = "Textures/stage/ArrowBlock";
+                // 子オブジェクト(ArrowBlock)のSpriteRenderer参照
+                spriteRenderer = transform.Find("ArrowBlock").GetComponent<SpriteRenderer>();
+            }
+            // CannotBlockがある場合
+            else if(Data[line][Row] == "CannotBlock"){
+                path = "Textures/stage/CannotBlock";
+                // 子オブジェクト(CannotBlock)のSpriteRenderer参照
+                spriteRenderer = transform.Find("CannotBlock").GetComponent<SpriteRenderer>();
+            }
+            // FixedBlockがある場合
+            else if(Data[line][Row] == "FixedBlock"){
+                path = "Textures/stage/FixedBlock";
+                // 子オブジェクト(FixedBlock)のSpriteRenderer参照
+                spriteRenderer = transform.Find("FixedBlock ").GetComponent<SpriteRenderer>();
+            }
+            // どのギミックにも該当しない場合
+            else{
+                continue;
+            }
+            // すでにspriteが設定されていたら2重にspriteを読み込まない制御
+            if (spriteRenderer.sprite == null){
+                // Resourcesからspriteを読み込む
+                var sprite = Resources.Load<Sprite>(path);
+                // sprite設定
+                spriteRenderer.sprite = sprite;
+            }
+        }
+    }
+
     /// <summary>
     ///　拡大縮小
     /// </summary>
@@ -162,6 +223,8 @@ public class Stage : MonoBehaviour
         {
             // 元の色にする
             GetComponent<Renderer>().material.color = Color.white;
+            // csvファイル読み込み
+            csvLoader();
         }
         else if (!ClearFlag)
         {

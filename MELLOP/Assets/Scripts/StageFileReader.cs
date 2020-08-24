@@ -62,7 +62,6 @@ public class StageFileReader
                 return null;
             }
             stage[i - 1] = block;
-
         }
         return stage;
     }

@@ -109,7 +109,6 @@ namespace SelectStage
                 sceneFlag = true;
                 // start
                 StartScene();
-                //return;
             }
             // 選択カーソルが何番のステージを選んでるか検索
             Search();
@@ -271,10 +270,8 @@ namespace SelectStage
         // シーン遷移
         private void SceneLoader()
         {
-            //SceneManager.sceneLoaded += GameSceneLoad;
             // シーン遷移
             SceneManager.LoadScene("GameScene");
-            //Debug.Log(number);
         }
 
         // クリアの報告
@@ -286,13 +283,5 @@ namespace SelectStage
                 StageReleaseFlags[number + 1] = true;
             }
         }
-
-        // シーン遷移の際に呼び出す処理
-        private void GameSceneLoad(Scene next , LoadSceneMode mode)
-        {
-            var StageData = GameObject.Find("stage").GetComponent<Stage>();
-        }
-
-        
     }
 }
